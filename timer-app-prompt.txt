@@ -1,0 +1,54 @@
+Ok, we're going to write a gui timer application in Python. It's called chrono-tomato-automato. 
+
+Let's start by defining a Timer class to represent a timer. A timer should have a name, a duration, a time remaining a sound file to play when the timer starts, a sound file to play when the timer ends, a flag that indicates a timer is enabled, a flag indicating that the timer is running, and a flag that indicates whether or not the next timer should start automatically when this timer ends. Default names should be assigned sequentially, Timer1, Timer2, etc. Default duration and time remaning will both be empty string, which will be the equivalent of zero minutes and zero seconds. Sound files will default to empty string which will indicate that no sound is to be played. All flags should default to false.
+
+Next, we'll write a TimerEditor controller. This will be a Tkinter widget for displaying and editing the properties of a timer. The current timer flag should be displayed by changing the background of the widget to indicate that it is a current one. The next timer should start automatically flag should be a checkbox. Also, there will be a Delete button for removing a timer from our application. The two sound file fields should trigger a file dialog that allows the user to select a file whose path will be stored in the file field. Also add Up and Down buttons to move a timer up or down in the list of timers.Also start and stop buttons that can be used to start or stop each individual Timer. All fields of all timers should be visible, displayed and editable at all times. The fields can simply be added to a frame one at a time; no specific layout is requried.
+
+The TimerEditor should display both the initial duration and the time remaining.
+
+After that, we will write a TimerGui class. The top part of the window should have a row of buttons for: Add Timer, Start Seq, Stop Seq, and Reset All Timers. the bottom part of the window will display a window with one or more TimerEditor widgets in a scrollable pane. 
+- add timer will create a new Timer and add its TimerEditor to the gui
+- Start Seq will start the first enabled timer that is not running. If no timers are enabled or if the first enabled timer is already running this button will have no effect.
+- Stop Seq should stop ALL running timers.
+- reset all should set all timers to not be running and set their time remaining to blank
+- Timers will be listed in the order that they are added, but the user should be able to change their positions with the Up and Down buttons in the individual TimerEditor instances.
+- The TimerGui class should also have the ability to delete a timer, but the Delete button in the individual TimerEditor instances should trigger that operation.
+
+Timers will be ordered in the order they are added, except as changed by the Up and Down buttons in the TimerEditor, which should move a particular timer up or down in the list. If a timer is deleted it should be removed from the list with other timers maintaining their order. No more than nine timers should be allowed. An attempt to add additional timers beyond the limit can simply be ignored; no audio or visual indication of this need be generated. The Add Timer button should be disabled when the number of timers has reached the limit.
+
+Next we will need a TimerLoop class. It will loop through and manage the timers for us.
+- the granularity of the loop should be one (1) second. 
+- if a timer is disabled it will be ignored
+- if a timer is enabled and running, we will decrement the time remaining. If the time remaining reaches zero, we will play the stop sound, and stop the timer. No visual feedback need be provided. If the flag is set to start the next timer automatically, the next ENABLED timer will have its time remaining reset and will be put into the running state. When a timer is put into the running state, it's start sound should play. 
+
+Sound files that cannot be found should produce an error dialog explaining which file could not be found, and no sound needs to be played in that case. Use playsound module to handle playback of WAV files. Other file formats should be permissible if playsound supports them. File formats not known to be supported by playsound should not be allowed. Just use file extensions to determine the format. If the user tries to play an unsupported file format, an error dialog should be displayed.
+
+Multiple timers should be able to run concurrently, though the user will have to start them individually to make this happen. Normally, the start button will start the first timer, which may or may not start the second timer, based on the automatic flag, and so on in sequence. If the last timer in the sequence has an automatic flag it should loop back to the first timer in the list.
+
+If multiple timers start or end at the same time, the sounds for all the timers should play sequentially, in the same order as their timers are arranged. Sounds should be added to some sort of queue and be played back in the appropriate order.
+
+If a timer's duration is changed while it is running, the new value should take effect immediately. The time remaning should be updated to be no greater than the new duration. If the duration of a running timer is changed to a value greater than the current time remaining, the current time remaining will remain the same.
+
+If a timer is deleted while it is running, it is just deleted. The next timer will not be activated in that case, even if the automatic flag was set on the timer that was deleted.
+
+The duration of timers will be in minutes with a maximum duration of 99 minutes and 99 seconds. They should be displayed as minutes:seconds, and count down one second at a time. Duration should be entered as a string, but not take effect until the user presses return. If a value greater than 99:99 is entered the value 99:99 should be used. 
+
+If an unintelligible or invalid duration value is entered it should be replaced with an empty string. If the timer is runnning when this happens, the timer should be stopped.
+
+Implement an observer pattern to notify TimerEditor of changes in a Timer's state.
+
+Any other invalid file paths should also display an error dialog.
+
+Finally, we will need a TimerMain.py to start and run the app.
+
+We will also want the app to be able to automatically save the current state of all the timers in a preferences file, and load those preferences when the app starts up again. The preferences should not store the time remaining, which should be set to zero when the app is reloaded. Likewise, the timer running flag should not be stored and should be initialized to false when the program starts. Preferences should be stored in an chrono-tomato-automato.ini file using configparser. Something like num_timers, and then timer.1.name, timer.1.duration, etc, would be sufficient.
+
+The ini file can be in any format that will support both reading and writing of all timer files, but should be human readable.
+
+The ini file should be read when the application starts, and saved when the application quits.
+
+Do you have any questions? Is this specification sufficient? Write a very brief outline but do not describe the properties or methods. Highlight any possible ambiguities or omissions. 
+
+Do NOT write any of the code yet. We'll do that piece by piece in later steps.
+
+
